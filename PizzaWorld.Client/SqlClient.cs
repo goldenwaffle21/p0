@@ -1,6 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using PizzaWorld.Domain.Models;
 using PizzaWorld.Storing;
-using System
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -56,6 +57,11 @@ namespace PizzaWorld.Client
         public void Save(Store store)
         {
             _db.Add(store);
+            _db.SaveChanges();
+        }
+        public void Save(User user)
+        {
+            _db.Add(user);
             _db.SaveChanges();
         }
         

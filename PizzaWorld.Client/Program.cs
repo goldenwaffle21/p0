@@ -103,7 +103,9 @@ namespace PizzaWorld.Client
                 NewOrModify();
             }
 
-            _sql.Update();
+            //Save this operation to the database and ask if the user wants another operation
+            _sql.Save(u);
+            _sql.Save(u.SelectedStore);
             Console.WriteLine("Thank you for using PizzaCo Online!",
                 "Is there more you would like to do on our site?");
             if (YesNo()) {UserView();}

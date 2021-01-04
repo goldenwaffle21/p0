@@ -5,6 +5,14 @@
     <ProjectReference Include="..\PizzaWorld.Storing\PizzaWorld.Storing.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="microsoft.entityframeworkcore.design" Version="5.0.1">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="microsoft.entityframeworkcore.sqlserver" Version="5.0.1" />
+  </ItemGroup>
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
