@@ -8,11 +8,14 @@ namespace PizzaWorld.Testing
         [Fact]
         public void Test_OrderExists()
         {
+            //Given
             var sut = new Order();
-            Order sut1 = new Order();
 
+            //When
+            Order sut1 = new Order();    //memory allocation
+            
+            //Then
             var actual = sut;
-
             Assert.IsType<Order>(actual);
             Assert.NotNull(actual);
         }

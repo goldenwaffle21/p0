@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using PizzaWorld.Domain.Models;
 using PizzaWorld.Storing;
 using System;
@@ -24,7 +23,7 @@ namespace PizzaWorld.Client
         }
         public Store ReadOneStore(string name)
         {
-            var s = _db.Stores.FirstOrDefault(s => s.name == name);
+            var s = _db.Stores.FirstOrDefault(s => s.Name.ToLower() == name);
             return s;
         }
 
@@ -43,6 +42,11 @@ namespace PizzaWorld.Client
         public User ReadOneUser(long Id)
         {
             var u = _db.Users.FirstOrDefault(u => u.Id == Id);
+            return u;
+        }
+        public User ReadOneUser(string name)
+        {
+            var u = _db.Users.FirstOrDefault(u => u.Name == name);
             return u;
         }
 
@@ -65,8 +69,10 @@ namespace PizzaWorld.Client
             _db.SaveChanges();
         }
         
-        public void Update()
+        public void Update(Store store,User user)
         {
+            _db.Update(store);
+            _db.Update(user);
             _db.SaveChanges();
         }
         public void CreateStore()
@@ -76,7 +82,7 @@ namespace PizzaWorld.Client
 
         public Store SelectStore()
         {
-            string input = Console.ReadLine();
+            string input = Console.ReadLine().ToLower().Trim();
             if (ReadOneStore(input)==null)    //input was invalid
             {
                 Apologize();
@@ -99,7 +105,7 @@ namespace PizzaWorld.Client
 
         public void Apologize()
         {
-            Console.WriteLine("Sorry, we didn't catch that. Could you please repeat it?");
+            Console.WriteLine("\nSorry, we didn't catch that. Could you please repeat it?");
         }
     }
 }

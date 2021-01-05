@@ -42,15 +42,15 @@ namespace PizzaWorld.Domain.Models
             u.Orders[u.Orders.FindIndex(x => x == o)] = o2;
             if (o2.tprice < o.tprice)
             {
-                Console.WriteLine("Your order now costs $"+(o.tprice-o2.tprice)+" less than before; you have been refunded the difference");
+                Console.WriteLine($"\nYour order now costs ${(o.tprice-o2.tprice)} less than before; you have been refunded the difference");
             }
             else if (o2.tprice == o.tprice)
             {
-                Console.WriteLine("Your order's price didn't change. No refunds or charges have been issued.");
+                Console.WriteLine("\nYour order's price didn't change. No refunds or charges have been issued.");
             }
             else
             {
-                Console.WriteLine("Your order now costs $"+(o2.tprice-o.tprice)+" more than before; the difference has been charged to your account.");
+                Console.WriteLine($"\nYour order now costs ${(o2.tprice-o.tprice)} more than before; the difference has been charged to your account.");
             }
             return o2;
         }

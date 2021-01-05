@@ -9,7 +9,7 @@ namespace PizzaWorld.Domain.Models
     {
         private GenericPizzaFactory _pizzaFactory = new GenericPizzaFactory();
 
-        public List<APizzaModel> Pizzas {get;set;}
+        public List<APizzaModel> Pizzas = new List<APizzaModel>();
 
         public bool paid = false;
         public string status = "not yet delivered";
@@ -28,33 +28,27 @@ namespace PizzaWorld.Domain.Models
             bool done = false;
             while (done == false)
             {
-                Console.WriteLine("Select pizza #"+i,
-                    "Cheese",
-                    "Hawaiian (ham & pineapple, with tomato sauce)",
-                    "Meat (peperoni & sausage, with tomato sauce)",
-                    "Pesto (artichoke hearts, feta, garlic, & mushrooms, with pesto sauce",
-                    "Custom (choose your own ingredients",
-                    "",
-                    "Please type the name of the type of pizza you want (you will be able to modify it in the next step, if you want to).",
-                    "Or, type 'done' if you've already selected all the pizzas you want.");
+                Console.WriteLine($"\nSelect pizza #{i}: \n\nCheese \nHawaiian (ham & pineapple, with tomato sauce) \nMeat (peperoni & sausage, with tomato sauce) \nPesto (artichoke hearts, feta, garlic, & mushrooms, with pesto sauce) \nCustom (choose your own ingredients) \n\nPlease type the name of the type of pizza you want (you will be able to modify it in the next step, if you want to). \nOr, type 'done' if you've already selected all the pizzas you want.");
                 string input = Console.ReadLine().ToLower().Trim();
                 if (input == "done") {break;}
                 else if (input.Contains("cheese")) {MakeCheesePizza();}
-                else if (input.Contains("hawaiian")) {MakeHawaiianPizza();}
+                else if (input.Contains("hawaiian") | input.Contains("hawaian")) {MakeHawaiianPizza();}
                 else if (input.Contains("meat")) {MakeMeatPizza();}
                 else if (input.Contains("pesto")) {MakePestoPizza();}
                 else if (input.Contains("custom")) {MakeCustomPizza(new CheesePizza());}
                 else
                 {
-                    Console.WriteLine("Sorry, we didn't catch that. Could you please repeat it?");
+                    Console.WriteLine("\nSorry, we didn't catch that. Could you please repeat it?");
                     continue;
                 }
-                PrintPizza(-1);    //displays the most recently created pizza
-                CustomOrNot(Pizzas[-1]);
-                i += NumberOf(Pizzas[-1]);    //This also adds those pizzas to the list
+                Pizzas[^1].PrintPizza();    //displays the most recently created pizza
+                if (!input.Contains("custom"))
+                {
+                    CustomOrNot(Pizzas[^1]);
+                }
+                i += NumberOf(Pizzas[^1]);    //This also adds those pizzas to the list
                 PrintOrder();
-                Console.WriteLine("",
-                    "Add more pizzas? (Y/N)");
+                Console.WriteLine("\nAdd more pizzas? (Y/N)");
                 string s = Console.ReadLine().ToLower().Trim();
                 if (s == "n" | s == "no") {done = true;}
             }
@@ -80,52 +74,42 @@ namespace PizzaWorld.Domain.Models
         {
             APizzaModel custom = new CustomPizza(p);
             Pizzas.Add(custom);
-            Console.WriteLine($"Your {custom.Name} pizza is ready for order:");
-            PrintPizza(-1);
-            Console.WriteLine("Would you like to modify this pizza further? (Y/N)");
+            Console.WriteLine($"\nYour {custom.Name} pizza is ready for order:");
+            Pizzas[^1].PrintPizza();
+            Console.WriteLine("\nWould you like to modify this pizza further? (Y/N)");
             if (CustomPizza.YesNo())
             {
-                Pizzas.Remove(Pizzas[-1]);
+                Pizzas.Remove(Pizzas[^1]);
                 MakeCustomPizza(custom);
             }
         }
-
-        public void PrintPizza(int i)
-        {
-            APizzaModel p = Pizzas[i];
-            Console.WriteLine("You've selected a "+p.Name+" pizza",
-                "Size: "+p.Size,
-                "Crust: "+p.Crust,
-                "Sauce: "+p.Sauce,
-                "Topings: "+p.ToppingsString());
-        }
         public void CustomOrNot(APizzaModel p)
         {
-            Console.WriteLine("Would you like to customize this pizza? (Y/N)");
+            Console.WriteLine("\nWould you like to customize this pizza? (Y/N)");
             string s = Console.ReadLine().Trim().ToLower();
             if (s == "y" | s == "yes")
             {
-                Pizzas.RemoveAt(-1);    //remove the unmodified pizza from the order
                 MakeCustomPizza(p);
+                Pizzas.Remove(p);    //remove the unmodified pizza from the order
             }
             else if (s != "n" & s != "no")
             {
-                Console.WriteLine("Sorry, we didn't catch that. Could you please repeat it?");
+                Console.WriteLine("\nSorry, we didn't catch that. Could you please repeat it?");
                 CustomOrNot(p);
             }
         }
         public int NumberOf(APizzaModel p)
         {
-            PrintPizza(-1);
-            Console.WriteLine("How many of this pizza would you like to order? (Please type the number)");
+            Pizzas[^1].PrintPizza();
+            Console.WriteLine("\nHow many of this pizza would you like to order? (Please type the number)");
             if (!int.TryParse(Console.ReadLine(), out int input) | input<0)
             {
-                Console.WriteLine("Sorry, we didn't catch that. Could you please repeat it?");
+                Console.WriteLine("\nSorry, we didn't catch that. Could you please repeat it?");
                 NumberOf(p);
             }
             if (input == 0)    //If the customer didn't mean to order that pizza
             {
-                Pizzas.RemoveAt(-1);
+                Pizzas.Remove(Pizzas[^1]);
             }
             else
             {
@@ -138,25 +122,25 @@ namespace PizzaWorld.Domain.Models
         }
         public void PrintOrder()
         {
-            Console.WriteLine("Your current order is:");
-                foreach (APizzaModel p in Pizzas)
-                {
-                    Console.WriteLine(p.Size+" "+p.Name+" - "+p.Price);
-                    tprice += p.Price;
-                }
-                Console.WriteLine("Total Price: $"+tprice);
+            tprice = 0;
+            Console.WriteLine("\nYour current order is:");
+            foreach (APizzaModel p in Pizzas)
+            {
+                Console.WriteLine($"{p.Size} {p.Name} - {p.Price}");
+                tprice += p.Price;
+            }
+            Console.WriteLine($"Total Price: ${tprice}");
         }
 
         public void Pay()
         {
-            Console.WriteLine("",
-                "Pay for order now? (Y/N)");
+            Console.WriteLine("\nPay for order now? (Y/N)");
             string s = Console.ReadLine().Trim().ToLower();
             if (s == "y" | s == "yes") {paid = true;}
-            if (s == "n" | s == "no") {paid = false;}
+            else if (s == "n" | s == "no") {paid = false;}
             else 
             {
-                Console.WriteLine("Sorry, we didn't catch that. Could you please repeat it?");
+                Console.WriteLine("\nSorry, we didn't catch that. Could you please repeat it?");
                 Pay();
             }
         }

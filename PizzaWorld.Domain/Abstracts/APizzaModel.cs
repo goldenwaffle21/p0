@@ -1,3 +1,5 @@
+using PizzaWorld.Domain.Models;
+using System;
 using System.Collections.Generic;
 
 namespace PizzaWorld.Domain.Abstracts
@@ -8,14 +10,14 @@ namespace PizzaWorld.Domain.Abstracts
         public string Crust {get;set;}
         public string Size {get;set;}
         public string Sauce {get;set;}
-        public List<string> Toppings {get;set;}
+        public List<Topping> Toppings = new List<Topping>();
         public double Price {get;set;}
 
         protected APizzaModel()
         {
             AddName();
-            AddCrust();
             AddSize();
+            AddCrust();
             AddSauce();
             AddToppings();
             CalculatePrice();
@@ -47,9 +49,17 @@ namespace PizzaWorld.Domain.Abstracts
             string ts = "";
             foreach (var topping in Toppings)
             {
-                ts += topping+", ";
+                if (topping.Name != "") {ts += topping.Name+", ";}
             }
-            return ts.Substring(-3);
+            if (ts != "") 
+            {
+                ts = ts.Substring(0,(ts.Length - 2));
+            }
+            return ts;
+        }
+        public void PrintPizza()
+        {
+            Console.WriteLine($"\nYou've selected a {Name} pizza \nSize: {Size} \nCrust: {Crust} \nSauce: {Sauce} \nTopings: {ToppingsString()}");
         }
     }
 }

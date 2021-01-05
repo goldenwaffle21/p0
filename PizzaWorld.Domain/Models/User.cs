@@ -8,6 +8,10 @@ namespace PizzaWorld.Domain.Models
 {
     public class User : AEntity
     {
+        public User()
+        {
+            Orders = new List<Order>();
+        }
         public List<Order> Orders {get;set;}
         public Store SelectedStore;
         public string Name {get;set;}
@@ -27,7 +31,12 @@ namespace PizzaWorld.Domain.Models
         {
             foreach (Order o in Orders)
             {
-                Console.WriteLine($"Order ID: {o.Id} ({o.status})");
+                Console.WriteLine($"Order ID: {o.Id} ({o.status}),   Price: ${o.tprice}");
+                foreach (APizzaModel p in o.Pizzas)
+                {
+                    Console.WriteLine($"   {p.Size} {p.Name} ({p.Crust}, {p.Sauce}, {p.ToppingsString()})",
+                        "   $"+p.Price);
+                }
             }
         }
         public void PrintUndeliveredOrders()

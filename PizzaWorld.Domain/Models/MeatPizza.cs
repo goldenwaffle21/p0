@@ -1,4 +1,5 @@
 using PizzaWorld.Domain.Abstracts;
+using System;
 using System.Collections.Generic;
 
 namespace PizzaWorld.Domain.Models
@@ -23,7 +24,11 @@ namespace PizzaWorld.Domain.Models
         }
         protected override void AddToppings()
         {
-            Toppings = new List<string>{"cheese","pepperoni","sausage"};
+            List<string> toppingnames = new List<string>{"cheese","pepperoni","sausage"};
+            foreach (string s in toppingnames)
+            {
+                Toppings.Add(new Topping(s));
+            }
         }
     }
 }

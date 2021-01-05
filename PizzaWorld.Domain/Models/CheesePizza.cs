@@ -23,7 +23,11 @@ namespace PizzaWorld.Domain.Models
         }
         protected override void AddToppings()
         {
-            Toppings = new List<string>{"cheese"};
+            List<string> toppingnames = new List<string>{"cheese"};
+            foreach (string s in toppingnames)
+            {
+                Toppings.Add(new Topping(s));
+            }
         }
     }
 }
